@@ -1,2 +1,3 @@
-# Amenities4D
-root project in a series of [potentially many] different c4d workflow tweaks/additions.
+# CINEMANGO
+//root compiled project of a series of <various> custom C4D plugins and assets for stylized workflows.
+//elimango
