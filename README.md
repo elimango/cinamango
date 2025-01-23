@@ -1,4 +1,4 @@
-# Cine(ma)ngo - For your project, for your cinema.
+# Cina(ma)ngo - For your project, for your cinema.
 root compiled project of a series for npr workflow-focused custom C4D plugins and assets.
 
 ## Including (roadmap; not limited to)
