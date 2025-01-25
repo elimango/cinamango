@@ -7,6 +7,7 @@ root compiled project of a series for npr workflow-focused custom C4D plugins an
 - Cleaner Standard/Physical node-space compatible baking (one click solution to bake shader AOVs -> texture).
 - Camera track baking to parent (or other) track's keys for space switching.
 - Export selected points or the inverted selection in the structure manager to comma separated value and/or nodes selection.
+- Layer -> tag folders for vertical tag view.
 
 ### Contribution or related credit:
 @elimango - lead developer
