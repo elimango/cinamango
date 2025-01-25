@@ -6,6 +6,7 @@ root compiled project of a series for npr workflow-focused custom C4D plugins an
 - Separation of shader & object aovs into automatic render engine passes (takes system).
 - Standard/Physical node space compatible node texture baking.
 - Camera track baking to parent (or other) track's keys for space switching.
+- Export selected points or the inverted selection in the structure manager to comma separated value and/or nodes selection.
 
 ### Contribution or related credit:
 @elimango - lead developer
