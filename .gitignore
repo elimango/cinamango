@@ -3,6 +3,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Sub-branches
+mango-render/*
+
+# Skip Directories
+~/obsidian/user/
+~/users/
+$RECYCLE.BIN/*
+"System Volume Information"
+
+
 # C extensions
 *.so
 
