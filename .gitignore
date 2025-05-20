@@ -4,7 +4,10 @@ __pycache__/
 *$py.class
 
 # Sub-branches
-mango-render/*
+mango-render/
+./mango-render
+mango-scene/
+./mango-scene
 
 # Skip Directories
 ~/obsidian/user/
