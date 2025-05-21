@@ -1,5 +1,7 @@
-<<<<<<< Updated upstream
-# seremango - for your project, for your cinema.
+
+# mango4D - for your project, for your cinema.
+<img src="https://raw.githubusercontent.com/elimango/mango4D/refs/heads/mango/res/branding.png"></img>
+
 root compiled project of a series for npr workflow-focused custom C4D plugins and assets.
 
 ## Including (roadmap; not limited to)
@@ -21,8 +23,3 @@ root compiled project of a series for npr workflow-focused custom C4D plugins an
 ### Contribution or related credit:
 @elimango - lead developer
 =======
-# MANGO4D
-//root compiled project of a series of <various> custom C4D plugins and assets for stylized workflows.
-
-//elimango
->>>>>>> Stashed changes
