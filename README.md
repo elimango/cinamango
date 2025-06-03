@@ -1,4 +1,4 @@
-<img src="res/banner.png">
+<img src="/res/branding.png">
 # seremango - for your project, for your cinema.
 root compiled project of a series for npr workflow-focused custom C4D plugins and assets.
 
