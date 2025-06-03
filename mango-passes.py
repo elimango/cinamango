@@ -11,7 +11,7 @@ overrideName = "lightbox"
 
 takeEmbree = "EMBREE"
 takeSketch = "SKETCH"
-takeEmbreeRay = "SSEMBR"
+takeEmbreeRay = "SMEAR"
 takeRedshift = "REDSHIFT"
 enumlist = [takeEmbree, takeSketch, takeEmbreeRay, takeRedshift]
 
@@ -150,12 +150,7 @@ def main():
         print(f"Override Material: {materiallib.GetName()}")
 
     collectobj = getAllObjects(doc.GetFirstObject())
-    print(f"\nObjects:","\nFound",{len(collectobj)},"objects.")      
-
-    active[c4d.RDATA_XRES] = 1920.0
-    active[c4d.RDATA_YRES] = 804.0
-    active[c4d.RDATA_FRAMERATE] = 24.0
-    active[c4d.RDATA_FORMATDEPTH] = c4d.RDATA_FORMATDEPTH_32
+    
     renderers = []
     collectrd = getAllRenderData(doc.GetFirstRenderData())
     for name in enumlist:
