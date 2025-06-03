@@ -1,4 +1,4 @@
-<<<<<<< Updated upstream
+<img src="res/banner.png">
 # seremango - for your project, for your cinema.
 root compiled project of a series for npr workflow-focused custom C4D plugins and assets.
 
@@ -25,4 +25,3 @@ root compiled project of a series for npr workflow-focused custom C4D plugins an
 //root compiled project of a series of <various> custom C4D plugins and assets for stylized workflows.
 
 //elimango
->>>>>>> Stashed changes
