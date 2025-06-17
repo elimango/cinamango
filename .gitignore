@@ -1,3 +1,8 @@
+
+readme.md
+py ∕ mango ∕ render
+py ∕ mango ∕*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -10,6 +15,9 @@ mango-scene/
 ./mango-scene
 
 # Skip Directories
+.vscode
+.code*
+readme.md
 ~/obsidian/user/
 ~/users/
 $RECYCLE.BIN/*
