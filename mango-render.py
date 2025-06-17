@@ -11,9 +11,22 @@ import subprocess
 import tkinter as tk
 from tkinter import filedialog
 from pathlib import Path
+
+##===========================================================================================##
+##-----------------------------MANGOFARM RENDER SEQUENCE MANAGER-----------------------------##
+##==========================================================================================-##
+## This script is designed to run on systems with Cinema 4D installed (needs c4d module).    ##
+## As a proof of concept, it is in *heavy* prototyping stage and is not consumer-ready OOTB. ##
+## It was created specifically for elimango/studio and may not work on other systems without ##
+## modifications, requiring a project structure where it lives at the root of the project,   ##
+## demands './composite/', './animation/', and scene files are conventionally                ##
+## declared as './animation/scene_#/scene_#.c4d'                                             ##
+##===========================================================================================##
+
 root = tk.Tk()
 root.withdraw()
 
+## print codes, used for terminal output
 GOLD = '\033[33m'
 LIGHT_BLUE = '\033[94m'
 LIGHT_YELLOW = '\033[93m'
@@ -156,20 +169,25 @@ if len(client["users"]) > 0:
             found = True
             users.append(user["id"])   
             home = user["install"]
+            assetsdb = user["database"]
     dirty = True
 if len(client["users"]) < 1 or found is False:
-    home = filedialog.askdirectory()
+    home = filedialog.askdirectory(initialdir="/",title="Select Cinema 4D home directory: (../Maxon/Cinema 4D 2025/)")
     if home:
-        print(f"Selected directory: {home}")
+        print(f"Selected directory for C4D home: {home}")
+    assetsdb = filedialog.askdirectory(initialdir="/",title="Select assetsdb directory: (../assetsdb/)")
+    if assetsdb:
+        print(f"Selected directory for connected assetsdb: {assetsdb}")
     client["users"].append({
             "id": host, 
-            "install": home
+            "install": home,
+            "database": assetsdb
             })
 with open(clientjson, "w", encoding="utf-8") as f:
     json.dump(client, f, indent=4)
     
 install = '"{}"'.format(home)
-commandline = '"{}"'.format(f"{home}/Commandline.exe")
+commandline = str('"{}"'.format(f"{home}/Commandline.exe") + "g_connectdatabase=" + '"{}"'.format(assetsdb))
 c4dpy = '"{}"'.format(f"{home}/c4dpy.exe")
 
 # get scenes
