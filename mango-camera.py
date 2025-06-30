@@ -2,6 +2,9 @@ import c4d
 from c4d import gui
 import time
 
+## ANOTHER PROTOTYPING SCRIPT !! IT WILL AND DOES CURRENTLY LOOK LIKE A MESS !! ##
+keybrake = None
+dispatch = False
 doc = c4d.documents.GetActiveDocument()
 
 ID_OBJECT_LINK = 1000
@@ -73,11 +76,14 @@ def BakeFrames(obj, target, min, max):
                           c4d.BaseTime(currentTime.GetFrame(fps), fps))
             doc.EndUndo() 
             currentTime += c4d.BaseTime(1, fps)
+    global dispatch
+    dispatch = True            
     tag = obj.GetTag(c4d.Tcaconstraint)
     if tag:
-        tag.Remove()                               
+        tag.Remove()
             
-class ObjectLinkDialog(gui.GeDialog):
+class KeyBrakeWrapper(gui.GeDialog): 
+
     def CreateLayout(self):
         self.SetTitle("Key Brake Manager")
         self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_SCALEFIT, name="Operations")
@@ -120,19 +126,24 @@ class ObjectLinkDialog(gui.GeDialog):
 
         self.AddButton(ID_PRINT_BUTTON, c4d.BFH_SCALEFIT, name="Bake Tracks")
         return True
-
+    
     def InitValues(self):
-        self.SetFloat(ID_EDIT_MIN, 0, 0, 2555, 1, c4d.FORMAT_FRAMES)
-        self.SetFloat(ID_EDIT_MAX, 0, 0, 2555, 1, c4d.FORMAT_FRAMES)
+        self.SetFloat(ID_EDIT_MIN, 0, 0, 999999, 1, c4d.FORMAT_FRAMES)
+        self.SetFloat(ID_EDIT_MAX, 0, 0, 999999, 1, c4d.FORMAT_FRAMES)
         self.SetBool(ID_CHECK_RANGE, True)
         self.Enable(ID_RANGE_GROUP, True)
+        self.Enable(ID_TOGGLE_GROUP, True)
+        self.Enable(ID_RANGE_GROUP, True)        
+        self.LayoutChanged(0)
         return True
-
+        
     def Command(self, id, msg):  
         min = self.GetFloat(ID_EDIT_MIN) if self.GetBool(ID_CHECK_RANGE) else None
         max = self.GetFloat(ID_EDIT_MAX) if self.GetBool(ID_CHECK_RANGE) else None    
         viewport: c4d.BaseDraw = doc.GetRenderBaseDraw()
-        camera: c4d.BaseObject = viewport.GetSceneCamera(doc)       
+        camera: c4d.BaseObject = viewport.GetSceneCamera(doc)
+        invalid = False
+        target = None
         if id == ID_CHECK_VIEW:
             state = self.GetBool(ID_CHECK_VIEW)
             self.Enable(ID_TOGGLE_GROUP, not state)
@@ -141,13 +152,10 @@ class ObjectLinkDialog(gui.GeDialog):
             state = self.GetBool(ID_CHECK_RANGE)
             self.Enable(ID_RANGE_GROUP, state)
             self.LayoutChanged(ID_RANGE_GROUP)                   
-        if id == ID_PRINT_BUTTON:
-            invalid = False            
+        if id == ID_PRINT_BUTTON:        
             if not self.GetBool(ID_CHECK_VIEW):
                 if self.input:
-                    target = self.input.GetLink()
-                else:
-                    target = None
+                    target = self.input.GetLink()         
             else:
                 target = camera
             if self.source:
@@ -159,6 +167,17 @@ class ObjectLinkDialog(gui.GeDialog):
                     invalid = True
             if not invalid:
                 BakeFrames(source, target, min, max)
+            self.SetTimer(255)
+            return True
         return True
-dlg = ObjectLinkDialog()
-dlg.Open(c4d.DLG_TYPE_ASYNC, defaultw=350, defaulth=120)
+    def Timer(self, msg):
+        self.SetTimer(0)
+        if dispatch == True:
+            self.Close()        
+def main():
+    global keybrake
+    if keybrake is None:
+        keybrake = KeyBrakeWrapper()
+    keybrake.Open(c4d.DLG_TYPE_ASYNC, defaultw=350, defaulth=120)
+
+main()
