@@ -79,18 +79,8 @@ def BakeFrames(obj, target, min, max):
             
 class ObjectLinkDialog(gui.GeDialog):
     def CreateLayout(self):
-        self.SetTitle("Keybrake Manager")
+        self.SetTitle("Key Brake Manager")
         self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_SCALEFIT, name="Operations")
-
-        self.GroupBegin(ID_OPERATION_GROUP, c4d.BFH_SCALEFIT, cols=2, rows=1)
-        self.GroupBorderSpace(8, 5, 8, 3)  # left, top, right, bottom        
-        self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Use Viewcam For Target")
-        self.AddCheckbox(ID_CHECK_VIEW, c4d.BFH_LEFT, initw=25, inith=12, name="")
-        self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Use Range For Target")            
-        self.AddCheckbox(ID_CHECK_RANGE, c4d.BFH_LEFT, initw=25, inith=12, name="")
-        
-        
-        self.GroupEnd()
 
         self.GroupBegin(ID_SOURCE_GROUP, c4d.BFH_SCALEFIT | c4d.BFV_SCALEFIT, cols=1, rows=1)
         self.GroupBorderSpace(5, 1, 1, 1)  # left, top, right, bottom
@@ -101,17 +91,31 @@ class ObjectLinkDialog(gui.GeDialog):
         self.source = self.AddCustomGui(ID_OBJECT_LINK, c4d.CUSTOMGUI_LINKBOX, "", c4d.BFH_SCALEFIT, 0, 0, bc)
         self.GroupEnd()  # End row group
 
+        self.GroupBegin(ID_OPERATION_GROUP, c4d.BFH_SCALEFIT, cols=2, rows=1)
+        self.GroupBorder(c4d.BORDER_GROUP_IN)
+        self.GroupBorderSpace(0, 0, 0, 6)  # left, top, right, bottom        
+        self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Use Viewcam For Target")
+        self.AddCheckbox(ID_CHECK_VIEW, c4d.BFH_RIGHT, initw=25, inith=12, name="")
+        self.GroupEnd()        
+
         self.GroupBegin(ID_TOGGLE_GROUP, c4d.BFH_SCALEFIT, cols=1, rows=1)
         self.GroupBorderSpace(0, 1, 1, 1)  # left, top, right, bottom                
         self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Target")    
         self.input = self.AddCustomGui(ID_TARGET_LINK, c4d.CUSTOMGUI_LINKBOX, "", c4d.BFH_SCALEFIT, 0, 0, bc)
         self.GroupEnd()
               
+        self.GroupBegin(ID_OPERATION_GROUP, c4d.BFH_SCALEFIT, cols=2, rows=1)
+        self.GroupBorder(c4d.BORDER_GROUP_IN)
+        self.GroupBorderSpace(0, 0, 0, 6)  # left, top, right, bottom        
+        self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Use Range For Target")            
+        self.AddCheckbox(ID_CHECK_RANGE, c4d.BFH_RIGHT, initw=25, inith=12, name="")
+        self.GroupEnd()        
+
         self.GroupBegin(ID_RANGE_GROUP, c4d.BFH_SCALEFIT, cols=4, rows=14)
         self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="Start")
-        self.AddEditNumberArrows(ID_EDIT_MIN, 45, 100, 0)
+        self.AddEditNumberArrows(ID_EDIT_MIN, 30, 146, 0)
         self.AddStaticText(ID_STATIC_TEXT, c4d.BFH_LEFT, name="End")
-        self.AddEditNumberArrows(ID_EDIT_MAX, 45, 100, 0)
+        self.AddEditNumberArrows(ID_EDIT_MAX, 30, 146, 0)
         self.GroupEnd()
 
         self.AddButton(ID_PRINT_BUTTON, c4d.BFH_SCALEFIT, name="Bake Tracks")

@@ -81,7 +81,7 @@ def SyncTracks(source, target):
                         
 class ObjectLinkDialog(gui.GeDialog):
     def CreateLayout(self):
-        self.SetTitle("Keysync Manager")
+        self.SetTitle("Key Sync Manager")
 
         # Begin vertical group with border padding
         self.AddStaticText(1000, c4d.BFH_LEFT, name="Operations")
