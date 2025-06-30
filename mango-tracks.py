@@ -1,21 +1,49 @@
 import c4d
 from c4d import gui
 
+## ANOTHER PROTOTYPING SCRIPT !! IT WILL AND DOES CURRENTLY LOOK LIKE A MESS !! ##
+
 ID_OBJECT_LINK = 1000
 ID_PRINT_BUTTON = 1002
 FIELDS = 2
 doc = c4d.documents.GetActiveDocument()
+
+
 def SyncTracks(source, target):
     prv = source.GetCTracks()
     nxt = target.GetCTracks()
-    for sourceTrack in prv:
+    nxtNames = []
+    prvNames = []
+    for name in prv:
+        prvNames.append(str(name.GetName()))
+    for name in nxt:
+        nxtNames.append(str(name.GetName()))
+    print("Tracks on Target: \n", nxtNames, "\n")
+    print("Tracks on Source: \n", prvNames, "\n")
+    for i, sourceTrack in enumerate(prv):
+        print("Source Track: {}".format(sourceTrack.GetName()))
         prvCurve = sourceTrack.GetCurve()
         prvCount = prvCurve.GetKeyCount()                
-        for targetTrack in nxt:
-            print("Target Track: {}".format(targetTrack.GetName()))
+        for j, targetTrack in enumerate(nxt):
+            print(" -> Target Track: {}".format(targetTrack.GetName()))
             nxtCurve = targetTrack.GetCurve()
             nxtCount = nxtCurve.GetKeyCount()
+            matches = False
+            identical = False
+            noverlap = False
+            if nxtNames[j] not in prvNames:
+                noverlap = True            
             if targetTrack.GetName() == sourceTrack.GetName():
+                matches = True
+                print("Tracks match in both objects!")
+            if str(sourceTrack.GetName()) in nxtNames[j] and noverlap:
+                print("   - Found identical track in source tracks")
+                print("         - Similar in Target: ", 
+                        nxtNames[j],
+                        "\n         - Similar in Source: ", sourceTrack.GetName())
+                identical = True
+            if matches or identical:
+                print("\nDiffing Source: \n    ",sourceTrack.GetName(),"\nDiffing Target: \n    ",targetTrack.GetName())
                 prvkeys = []
                 nxtkeys = []
                 stashkeys = []
@@ -23,50 +51,37 @@ def SyncTracks(source, target):
                 while prvkey < prvCount:
                     index = prvkeys[prvkey] if len(prvkeys) > 0 and prvkey < len(prvkeys) else prvkey
                     frame = prvCurve.FindNextUnmuted(index)[0].GetTime().GetFrame(doc.GetFps())
-                    ##matchkey = prvCurve.GetKey(frame)[0].GetTime().GetFrame(doc.GetFps())
                     prvkeys.append(frame)
                     prvkey += 1
-                print(prvkeys)
+                print("Source Track Keys: \n",prvkeys,"\n")
                 nxtkey = 0
                 while nxtkey < nxtCount:
                     index = nxtkeys[nxtkey] if len(nxtkeys) > 0 and nxtkey < len(nxtkeys) else nxtkey
                     frame = nxtCurve.FindNextUnmuted(index)[0].GetTime().GetFrame(doc.GetFps())
-                    ##matchkey = prvCurve.GetKey(frame)[0].GetTime().GetFrame(doc.GetFps())
                     nxtkeys.append(frame)
                     nxtkey += 1
+                print("Target Track Keys: \n",nxtkeys,"\n")
                 for old in nxtkeys:
                     for new in prvkeys:
                         if old == new:
                             nxtkeys.remove(new)
-                print("Diffed Keys: \n", nxtkeys)
+                print("Diffed Keys: \n", nxtkeys,"\n")
                 for stashed in sorted(nxtkeys, reverse=True):
                     pre = c4d.BaseTime(stashed, doc.GetFps())
                     found = nxtCurve.FindKey(pre).get("key").GetTime().GetFrame(doc.GetFps()) if nxtCurve.FindKey(pre) else None
                     stashkeys.append(found)
                     nxtCurve.DelKey(stashed, bUndo=True, SynchronizeKeys=True)
-                for frame in stashkeys:
-                    if frame in nxtkeys:
-                        nxtkeys.remove(frame)
-                print("Stashed Keys: \n", nxtkeys)
-                for idx, remainder in enumerate(prvkeys):
+                print("Stashed Keys: \n", nxtkeys,"\n")
+                for idx, remainder in enumerate(nxtkeys):
                     pre = c4d.BaseTime(stashed, doc.GetFps())
-                    index = remainder if idx > 0 else idx
-                    try:
-                        found, _ = nxtCurve.FindNextUnmuted(index)
-                        print("Found Key: ", found)
-                    except IndexError:
-                        found = None
+                    index = remainder
+                    found, _ = nxtCurve.FindNextUnmuted(index)
                     if found:
                         found.SetInterpolation(nxtCurve, c4d.CINTERPOLATION_STEP)
-                prvkeys.clear()
-                nxtkeys.clear()
-            else:
-                continue
-
                         
 class ObjectLinkDialog(gui.GeDialog):
     def CreateLayout(self):
-        self.SetTitle("Key Sync Manager")
+        self.SetTitle("Keysync Manager")
 
         # Begin vertical group with border padding
         self.AddStaticText(1000, c4d.BFH_LEFT, name="Operations")
@@ -112,7 +127,7 @@ class ObjectLinkDialog(gui.GeDialog):
                     invalid = True
             if not invalid:
                 print("Syncing tracks...")
-                SyncTracks(source, target)
+                SyncTracks(target, source)
         return True
 
 # Open async to allow drag/drop
